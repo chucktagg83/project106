@@ -5,7 +5,6 @@ function hello()
 // An example of changing the logic exec
 function saveTask(){
     console.log("Saving Task");
-
     // get the values from the form
     const title = $("#txtTitle").val();
     const desc = $("#txtDescription").val();
@@ -16,7 +15,24 @@ function saveTask(){
     // create a new task object
     const task = new Task(title,desc,color,date,status,budget);
     console.log(task);
-    displayTask(task);    
+    displayTask(task);  
+    //Send to server
+
+    $.ajax({
+        type:"POST",
+        url:API,
+        data:JSON.stringify(task),
+        contentType:"application/json",
+        success: function(created){
+            displayTask(task)
+            console.log(created);
+            
+        },
+        error: function(err){
+            console.log(err);
+        }
+
+    })
 }
 
 function displayTask(task){
@@ -46,6 +62,7 @@ function loadTasks(){
     $.ajax({
         type:"GET",// HTTP method - READ
         url: API,
+        datatype: "json", //Expected formal
         success: function(data){
             console.log("Data received", data);
         },
@@ -68,3 +85,18 @@ function init ()
 // force to my logic to run the html and css first - and when they finish the logic 
 // will be executed
 window.onload = init;
+
+function range(){
+    $.ajax({
+        type:"PUT",
+        url:API + "/4",
+        data: JSON.stringify({title: "Hello my name is Chuck!"}),
+        contentType: "application/json",
+        success: function(updated){
+            console.log(updated);
+        },
+        error: function(error){
+            console.log(error);
+        }
+    })
+}
